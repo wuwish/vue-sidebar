@@ -9,6 +9,13 @@
 <body>
 <div id="app">
     <span v-bind:title="title">{{ message }}</span>
+    <ol>
+        <template v-for="todo in todos" :id="todo.text">
+            <li v-if="todo.show">
+                <span>{{ todo.text }}</span>
+            </li>
+        </template>
+    </ol>
 </div>
 
 <script>
@@ -16,7 +23,12 @@
         el: '#app',
         data: {
             message: 'Hello Vue!',
-            title: "这是一个标题"
+            title: "这是一个标题",
+            todos: [
+                {text: '学习 JavaScript', show: true},
+                {text: '学习 Vue', show: false},
+                {text: '整个 React', show: true}
+            ]
         }
     });
 </script>
