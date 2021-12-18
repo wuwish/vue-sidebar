@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .active{
+            color: green;
+        }
+    </style>
     <!-- 开发环境版本，包含了有帮助的命令行警告 -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
 <body>
 <div id="app">
-    <span v-bind:title="title">{{ message }}</span>
+    <span v-bind:title="title" v-on:click="clickMessage" v-bind:class="{ active: isActive, 'text-danger': hasError }">{{ message }}</span>
+    <p>Computed reversed message: "{{ reversedMessage }}"</p>
     <ol>
         <template v-for="todo in todos" :id="todo.text">
             <li v-if="todo.show">
@@ -28,7 +34,28 @@
                 {text: '学习 JavaScript', show: true},
                 {text: '学习 Vue', show: false},
                 {text: '整个 React', show: true}
-            ]
+            ],
+            isActive: false,
+            hasError: false
+        },
+        created() {
+            console.log("初始化")
+        },
+        computed: {
+            // 计算属性的 getter
+            reversedMessage: function () {
+                return  this.message.split('').reverse().join('')
+            }
+        },
+        methods: {
+          clickMessage(){
+              this.isActive = true
+          }
+        },
+        watch:{
+            isActive(){
+                console.log("active 状态变了！")
+            }
         }
     });
 </script>
