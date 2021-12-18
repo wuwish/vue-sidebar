@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <title>Sidebar</title>
     <style>
-        body {
+        html, body {
             margin: 0;
             padding: 0;
+            height: 100%;
         }
 
         #app {
             text-align: center;
+            height: 100%;
         }
 
         :root {
@@ -54,6 +56,43 @@
         .rotate-180 {
             transform: rotate(180deg);
         }
+
+        .link {
+            display: flex;
+            align-items: center;
+
+            cursor: pointer;
+            position: relative;
+            font-weight: 400;
+            user-select: none;
+
+            margin: 0.1em 0;
+            padding: 0.4em;
+            border-radius: 0.25em;
+            height: 1.5em;
+
+            color: white;
+            text-decoration: none;
+        }
+
+        .link:hover {
+            background-color: var(--sidebar-item-hover);
+        }
+
+        .link.active {
+            background-color: var(--sidebar-item-active);
+        }
+
+        .link .icon {
+            flex-shrink: 0;
+            width: 25px;
+            margin-right: 10px;
+        }
+
+        .main {
+            height: 100%;
+            line-height: 700px;
+        }
     </style>
     <link href="./fontawesome/css/all.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -73,8 +112,18 @@
         <span class="collapse-icon" @click="toggleSidebar" :class="{ 'rotate-180': collapsed }">
             <i class="fas fa-angle-double-left"></i>
         </span>
+
+        <div v-for="menu in menus" class="link" :id="menu.name" :class="{ active: isActive(menu.path) }"
+             @click="switchRoute(menu)">
+            <i class="icon" :class="menu.icon"></i>
+            <span v-if="!collapsed">
+                {{menu.name}}
+            </span>
+        </div>
     </div>
-    <div class="main" :style="{ 'margin-left': sidebarWidth }"></div>
+    <div class="main" :style="{ 'margin-left': sidebarWidth }">
+        <h1>当前路径：{{path}}</h1>
+    </div>
 </div>
 
 <script>
@@ -85,15 +134,47 @@
         el: '#app',
         data: {
             collapsed: false,
+            path: "/",
+            menus: [
+                {
+                    name: "Dashboard",
+                    path: "/",
+                    icon: "fas fa-columns"
+                },
+                {
+                    name: "Home",
+                    path: "/home",
+                    icon: "fas fa-home"
+                },
+                {
+                    name: "Friends",
+                    path: "/friends",
+                    icon: "fas fa-users"
+                },
+            ]
         },
         computed: {
             sidebarWidth() {
                 return `${this.collapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH}px`
-            }
+            },
         },
         methods: {
             toggleSidebar() {
                 this.collapsed = !this.collapsed
+            },
+            isActive(path) {
+                return this.path === path
+            },
+            switchRoute({path}) {
+                this.path = path
+            }
+        },
+        created(){
+            console.log("页面加载完成啦！")
+        },
+        watch: {
+            path() {
+                window.location.hash = this.path
             }
         }
     });
