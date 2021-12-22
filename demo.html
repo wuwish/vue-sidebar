@@ -13,7 +13,7 @@
 </head>
 <body>
 <div id="app">
-    <span v-bind:title="title" v-on:click="clickMessage" v-bind:class="{ active: isActive, 'text-danger': hasError }">{{ message }}</span>
+    <span id="title" v-bind:title="title" v-on:click="clickMessage" v-bind:class="{ active: isActive }">{{ message }}</span>
     <p>Computed reversed message: "{{ reversedMessage }}"</p>
     <ol>
         <template v-for="todo in todos" :id="todo.text">
